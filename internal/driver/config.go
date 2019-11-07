@@ -34,6 +34,9 @@ type configuration struct {
 	IncomingKeepAlive int
 	IncomingClientId  string
 	IncomingTopic     string
+	IncommingTLSCA    string
+	IncomingTLSCert   string
+	IncomingTLSKey    string
 
 	ResponseSchema    string
 	ResponseHost      string
@@ -44,6 +47,9 @@ type configuration struct {
 	ResponseKeepAlive int
 	ResponseClientId  string
 	ResponseTopic     string
+	ResponseTLSCA     string
+	ResponseTLSCert   string
+	ResponseTLSKey    string
 }
 
 // CreateDriverConfig use to load driver config for incoming listener and response listener
