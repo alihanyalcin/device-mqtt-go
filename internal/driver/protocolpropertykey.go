@@ -16,6 +16,9 @@ const (
 	Password = "Password"
 	ClientId = "ClientId"
 	Topic    = "Topic"
+	TLSCA    = "TLSCA"
+	TLSCert  = "TLSCert"
+	TLSKey   = "TLSKey"
 
 	// Driver config
 	IncomingSchema    = "IncomingSchema"
@@ -27,6 +30,9 @@ const (
 	IncomingKeepAlive = "IncomingKeepAlive"
 	IncomingClientId  = "IncomingClientId"
 	IncomingTopic     = "IncomingTopic"
+	IncommingTLSCA    = "IncommingTLSCA"
+	IncomingTLSCert   = "IncomingTLSCert"
+	IncomingTLSKey    = "IncomingTLSKey"
 
 	ResponseSchema    = "ResponseSchema"
 	ResponseHost      = "ResponseHost"
@@ -37,4 +43,7 @@ const (
 	ResponseKeepAlive = "ResponseKeepAlive"
 	ResponseClientId  = "ResponseClientId"
 	ResponseTopic     = "ResponseTopic"
+	ResponseTLSCA     = "ResponseTLSCA"
+	ResponseTLSCert   = "ResponseTLSCert"
+	ResponseTLSKey    = "ResponseTLSKey"
 )

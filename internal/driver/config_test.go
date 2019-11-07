@@ -21,6 +21,9 @@ func TestCreateConnectionInfo(t *testing.T) {
 	password := "password"
 	clientId := "CommandPublisher"
 	topic := "CommandTopic"
+	ca := ""
+	cert := ""
+	key := ""
 	protocols := map[string]models.ProtocolProperties{
 		Protocol: {
 			Schema:   schema,
@@ -30,6 +33,9 @@ func TestCreateConnectionInfo(t *testing.T) {
 			Password: password,
 			ClientId: clientId,
 			Topic:    topic,
+			TLSCA:    ca,
+			TLSCert:  cert,
+			TLSKey:   key,
 		},
 	}
 
@@ -61,10 +67,12 @@ func TestCreateDriverConfig(t *testing.T) {
 		IncomingSchema: "tcp", IncomingHost: "0.0.0.0", IncomingPort: "1883",
 		IncomingUser: "admin", IncomingPassword: "public", IncomingQos: "0",
 		IncomingKeepAlive: "3600", IncomingClientId: "IncomingDataSubscriber", IncomingTopic: "DataTopic",
+		IncomingTLSKey: "", IncomingTLSCert: "", IncommingTLSCA: "",
 
 		ResponseSchema: "tcp", ResponseHost: "0.0.0.0", ResponsePort: "1883",
 		ResponseUser: "admin", ResponsePassword: "public", ResponseQos: "0",
 		ResponseKeepAlive: "3600", ResponseClientId: "CommandResponseSubscriber", ResponseTopic: "ResponseTopic",
+		ResponseTLSKey: "", ResponseTLSCert: "", ResponseTLSCA: "",
 	}
 	diverConfig, err := CreateDriverConfig(configs)
 	if err != nil {
