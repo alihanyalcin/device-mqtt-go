@@ -25,6 +25,9 @@ type ConnectionInfo struct {
 	Password string
 	ClientId string
 	Topic    string
+	TLSCA    string
+	TLSCert  string
+	TLSKey   string
 }
 
 type configuration struct {
