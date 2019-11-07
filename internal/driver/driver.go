@@ -41,6 +41,9 @@ type connectionInfo struct {
 	MqttUser       string
 	MqttPassword   string
 	MqttKeepAlive  int
+	TLSCA          string
+	TLSCert        string
+	TLSKey         string
 }
 
 type Driver struct {
