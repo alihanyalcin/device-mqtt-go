@@ -25,6 +25,9 @@ func startCommandResponseListening() error {
 	var qos = byte(driver.Config.ResponseQos)
 	var keepAlive = driver.Config.ResponseKeepAlive
 	var topic = driver.Config.ResponseTopic
+	var ca = driver.Config.ResponseTLSCA
+	var cert = driver.Config.ResponseTLSCert
+	var key = driver.Config.ResponseTLSKey
 
 	uri := &url.URL{
 		Scheme: strings.ToLower(scheme),
@@ -32,7 +35,12 @@ func startCommandResponseListening() error {
 		User:   url.UserPassword(username, password),
 	}
 
-	client, err := createClient(mqttClientId, uri, keepAlive)
+	tls, err := tlsConfig(ca, cert, key)
+	if err != nil {
+		driver.Logger.Error(fmt.Sprintf("[Incoming listener] TLS Error. msg=%v", err.Error()))
+	}
+
+	client, err := createClient(mqttClientId, uri, keepAlive, tls)
 	if err != nil {
 		return err
 	}
