@@ -7,6 +7,7 @@
 package driver
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -108,7 +109,12 @@ func (d *Driver) HandleReadCommands(deviceName string, protocols map[string]mode
 		User:   url.UserPassword(connectionInfo.User, connectionInfo.Password),
 	}
 
-	client, err := createClient(connectionInfo.ClientId, uri, 30)
+	tls, err := tlsConfig(connectionInfo.TLSCA, connectionInfo.TLSCert, connectionInfo.TLSKey)
+	if err != nil {
+		driver.Logger.Error(fmt.Sprintf("[Incoming listener] TLS Error. msg=%v", err.Error()))
+	}
+
+	client, err := createClient(connectionInfo.ClientId, uri, 30, tls)
 	if err != nil {
 		return responses, err
 	}
@@ -198,7 +204,12 @@ func (d *Driver) HandleWriteCommands(deviceName string, protocols map[string]mod
 		User:   url.UserPassword(connectionInfo.User, connectionInfo.Password),
 	}
 
-	client, err := createClient(connectionInfo.ClientId, uri, 30)
+	tls, err := tlsConfig(connectionInfo.TLSCA, connectionInfo.TLSCert, connectionInfo.TLSKey)
+	if err != nil {
+		driver.Logger.Error(fmt.Sprintf("[Incoming listener] TLS Error. msg=%v", err.Error()))
+	}
+
+	client, err := createClient(connectionInfo.ClientId, uri, 30, tls)
 	if err != nil {
 		return err
 	}
@@ -278,7 +289,7 @@ func (d *Driver) Stop(force bool) error {
 }
 
 // Create a MQTT client
-func createClient(clientID string, uri *url.URL, keepAlive int) (MQTT.Client, error) {
+func createClient(clientID string, uri *url.URL, keepAlive int, tls *tls.Config) (MQTT.Client, error) {
 	driver.Logger.Info(fmt.Sprintf("Create MQTT client and connection: uri=%v clientID=%v ", uri.String(), clientID))
 	opts := MQTT.NewClientOptions()
 	opts.AddBroker(fmt.Sprintf("%s://%s", uri.Scheme, uri.Host))
@@ -296,6 +307,9 @@ func createClient(clientID string, uri *url.URL, keepAlive int) (MQTT.Client, er
 			driver.Logger.Warn(fmt.Sprintf("Reconnection sucessful"))
 		}
 	})
+	if tls != nil {
+		opts.SetTLSConfig(tls)
+	}
 
 	client := MQTT.NewClient(opts)
 	token := client.Connect()
