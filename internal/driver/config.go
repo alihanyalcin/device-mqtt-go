@@ -7,7 +7,10 @@
 package driver
 
 import (
+	"crypto/tls"
+	"crypto/x509"
 	"fmt"
+	"io/ioutil"
 	"reflect"
 	"strconv"
 
@@ -104,4 +107,36 @@ func load(config map[string]string, des interface{}) error {
 		}
 	}
 	return nil
+}
+
+func tlsConfig(TLSCA, TLSCert, TLSKey string) (*tls.Config, error) {
+
+	if TLSCA == "" || (TLSCert == "" && TLSKey == "") {
+		return nil, nil
+	}
+
+	tlsConfig := &tls.Config{}
+
+	if TLSCA != "" {
+		pool := x509.NewCertPool()
+		pem, err := ioutil.ReadFile(TLSCA)
+		if err != nil {
+			return nil, err
+		}
+		check := pool.AppendCertsFromPEM(pem)
+		if !check {
+			return nil, fmt.Errorf("certificate can not added to pool")
+		}
+		tlsConfig.RootCAs = pool
+	}
+
+	if TLSCert != "" && TLSKey != "" {
+		cert, err := tls.LoadX509KeyPair(TLSCert, TLSKey)
+		if err != nil {
+			return nil, err
+		}
+		tlsConfig.Certificates = []tls.Certificate{cert}
+		tlsConfig.BuildNameToCertificate()
+	}
+	return tlsConfig, nil
 }
